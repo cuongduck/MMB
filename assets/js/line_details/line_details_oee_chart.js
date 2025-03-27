@@ -2,7 +2,7 @@ let lineOEEChart = null;
 
 async function updateLineOEEChart(line, period) {
     try {
-        const response = await fetch(`api/F3/line_details/get_line_oee_data.php?line=${line}&period=${period}`);
+        const response = await fetch(`api/line_details/get_line_oee_data.php?line=${line}&period=${period}`);
         const data = await response.json();
         
         // Tạo dữ liệu target line (89%)

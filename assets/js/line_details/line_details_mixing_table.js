@@ -1,6 +1,6 @@
 async function updateLineMixingTable(line) {
     try {
-        const response = await fetch(`api/F3/line_details/get_line_mixing_data.php?line=${line}`);
+        const response = await fetch(`api/line_details/get_line_mixing_data.php?line=${line}`);
         const result = await response.json();
 
         if (!result.success) {

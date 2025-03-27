@@ -2,7 +2,7 @@ let lineSteamChart = null;
 
 async function updateLineSteamChart(line, period) {
     try {
-        const response = await fetch(`api/F3/line_details/get_line_steam_data.php?line=${line}&period=${period}`);
+        const response = await fetch(`api/line_details/get_line_steam_data.php?line=${line}&period=${period}`);
         const data = await response.json();
 
         if (lineSteamChart) {
