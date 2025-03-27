@@ -1,0 +1,176 @@
+/* Styles cho biểu đồ IR Spectroscopy */
+
+/* Containers */
+.chart-container.ir-chart {
+    position: relative;
+    background-color: #f8f9fa;
+    border-radius: 6px;
+    box-shadow: inset 0 0 3px rgba(0,0,0,0.1);
+    overflow: hidden;
+}
+
+/* Hiệu ứng đồ họa */
+.ir-effect {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(
+        to right,
+        transparent 0%,
+        rgba(255,255,255,0.05) 25%,
+        rgba(255,255,255,0.1) 50%,
+        rgba(255,255,255,0.05) 75%,
+        transparent 100%
+    );
+    pointer-events: none;
+    animation: irScan 5s linear infinite;
+}
+
+@keyframes irScan {
+    0% { transform: translateX(-100%); }
+    100% { transform: translateX(100%); }
+}
+
+/* Đánh dấu điểm ngoài giới hạn */
+.out-of-range-marker {
+    position: absolute;
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    box-shadow: 0 0 4px rgba(0,0,0,0.5);
+    z-index: 10;
+    cursor: pointer;
+    animation: pulse 1.5s infinite;
+}
+
+.out-of-range-marker.high {
+    background-color: rgba(239, 68, 68, 0.8);
+}
+
+.out-of-range-marker.low {
+    background-color: rgba(59, 130, 246, 0.8);
+}
+
+@keyframes pulse {
+    0% { transform: translate(-50%, -50%) scale(1); opacity: 0.8; }
+    50% { transform: translate(-50%, -50%) scale(1.5); opacity: 0.5; }
+    100% { transform: translate(-50%, -50%) scale(1); opacity: 0.8; }
+}
+
+/* Thông tin khoảng giá trị */
+.range-info {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    background-color: rgba(255, 255, 255, 0.8);
+    padding: 4px 8px;
+    border-radius: 4px;
+    font-size: 12px;
+    color: #333;
+    z-index: 5;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+}
+
+/* Style cho nút điều khiển */
+.ir-controls {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    margin-top: 10px;
+}
+
+.ir-control-btn {
+    padding: 4px 8px;
+    background-color: #f1f5f9;
+    border: 1px solid #cbd5e1;
+    border-radius: 4px;
+    font-size: 12px;
+    color: #334155;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.ir-control-btn:hover {
+    background-color: #e2e8f0;
+}
+
+.ir-control-btn.active {
+    background-color: #3b82f6;
+    color: white;
+    border-color: #2563eb;
+}
+
+/* Tooltip cải tiến */
+.ir-tooltip {
+    position: absolute;
+    display: none;
+    background-color: rgba(255, 255, 255, 0.95);
+    border: 1px solid rgba(0, 0, 0, 0.1);
+    border-radius: 4px;
+    padding: 8px;
+    font-size: 12px;
+    color: #333;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+    z-index: 100;
+    pointer-events: none;
+    max-width: 250px;
+}
+
+.ir-tooltip-title {
+    font-weight: bold;
+    border-bottom: 1px solid #eee;
+    padding-bottom: 4px;
+    margin-bottom: 4px;
+}
+
+.ir-tooltip-value {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 2px;
+}
+
+.ir-tooltip-value.ok .ir-tooltip-status {
+    color: #22c55e;
+}
+
+.ir-tooltip-value.warning .ir-tooltip-status {
+    color: #f59e0b;
+}
+
+.ir-tooltip-value.error .ir-tooltip-status {
+    color: #ef4444;
+}
+
+/* Thêm hiệu ứng nổi cho card */
+.card.ir-card {
+    transition: all 0.3s;
+}
+
+.card.ir-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+}
+
+/* Hiệu ứng shimmer trên thẻ để mô phỏng quét IR */
+.shimmer-effect {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(
+        90deg, 
+        rgba(255,255,255,0) 0%, 
+        rgba(255,255,255,0.2) 50%, 
+        rgba(255,255,255,0) 100%
+    );
+    animation: shimmer 3s infinite;
+    pointer-events: none;
+}
+
+@keyframes shimmer {
+    0% { transform: translateX(-100%); }
+    100% { transform: translateX(100%); }
+}

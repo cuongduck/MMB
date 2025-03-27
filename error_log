@@ -1,0 +1,107 @@
+[26-Nov-2024 03:57:12 UTC] PHP Warning:  Undefined array key "username" in /home/pnlekoychosting/public_html/IoT/includes/header.php on line 21
+[26-Nov-2024 03:57:12 UTC] PHP Deprecated:  htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in /home/pnlekoychosting/public_html/IoT/includes/header.php on line 21
+[26-Nov-2024 03:57:16 UTC] PHP Warning:  Undefined array key "username" in /home/pnlekoychosting/public_html/IoT/includes/header.php on line 21
+[26-Nov-2024 03:57:16 UTC] PHP Deprecated:  htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in /home/pnlekoychosting/public_html/IoT/includes/header.php on line 21
+[26-Nov-2024 03:59:34 UTC] PHP Warning:  Undefined array key "username" in /home/pnlekoychosting/public_html/IoT/includes/header.php on line 21
+[26-Nov-2024 03:59:34 UTC] PHP Deprecated:  htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in /home/pnlekoychosting/public_html/IoT/includes/header.php on line 21
+[26-Nov-2024 04:25:29 UTC] PHP Warning:  Cannot modify header information - headers already sent by (output started at /home/pnlekoychosting/public_html/IoT/login.php:17) in /home/pnlekoychosting/public_html/IoT/login.php on line 35
+[27-Nov-2024 06:24:42 UTC] PHP Warning:  foreach() argument must be of type array|object, null given in /home/pnlekoychosting/public_html/includes/visitor_counter.php on line 34
+[29-Nov-2024 03:14:42 UTC] PHP Parse error:  syntax error, unexpected end of file, expecting variable or "${" or "{$" in /home/pnlekoychosting/public_html/check.php on line 9
+[29-Nov-2024 04:11:50 UTC] PHP Fatal error:  Uncaught Error: Object of class DateTime could not be converted to string in /home/pnlekoychosting/public_html/check.php:13
+Stack trace:
+#0 {main}
+  thrown in /home/pnlekoychosting/public_html/check.php on line 13
+[29-Nov-2024 11:14:24 Asia/Ho_Chi_Minh] PHP Fatal error:  Uncaught Error: Object of class DateTime could not be converted to string in /home/pnlekoychosting/public_html/check.php:14
+Stack trace:
+#0 {main}
+  thrown in /home/pnlekoychosting/public_html/check.php on line 14
+[12-Jan-2025 20:00:38 Asia/Ho_Chi_Minh] Remember me set: Success for user admin
+[12-Jan-2025 20:15:29 Asia/Ho_Chi_Minh] Remember me set: Success for user admin
+[13-Jan-2025 11:51:57 Asia/Ho_Chi_Minh] Remember me set: Success for user admin
+[13-Jan-2025 14:31:11 Asia/Ho_Chi_Minh] Remember me set: Success for user ttcn
+[13-Jan-2025 14:31:36 Asia/Ho_Chi_Minh] Remember me set: Success for user ttcn
+[13-Jan-2025 14:32:30 Asia/Ho_Chi_Minh] Remember me set: Success for user ttcn
+[13-Jan-2025 14:32:52 Asia/Ho_Chi_Minh] Remember me set: Success for user ttcn
+[13-Jan-2025 14:39:00 Asia/Ho_Chi_Minh] Remember me set: Success for user ttcn
+[13-Jan-2025 14:47:06 Asia/Ho_Chi_Minh] Remember me set: Success for user DungNT
+[13-Jan-2025 14:49:23 Asia/Ho_Chi_Minh] Remember me set: Success for user DungNT
+[13-Jan-2025 14:50:06 Asia/Ho_Chi_Minh] Remember me set: Success for user DungNT
+[14-Jan-2025 08:03:50 Asia/Ho_Chi_Minh] Remember me set: Success for user DungNT
+[14-Jan-2025 08:04:09 Asia/Ho_Chi_Minh] Remember me set: Success for user DungNT
+[14-Jan-2025 08:06:20 Asia/Ho_Chi_Minh] Remember me set: Success for user DungNT
+[14-Jan-2025 09:37:30 Asia/Ho_Chi_Minh] Remember me set: Success for user DungNT
+[14-Jan-2025 09:38:58 Asia/Ho_Chi_Minh] Remember me set: Success for user DungNT
+[14-Jan-2025 09:40:32 Asia/Ho_Chi_Minh] Remember me set: Success for user DungNT
+[14-Jan-2025 11:14:14 Asia/Ho_Chi_Minh] Remember me set: Success for user admin
+[14-Jan-2025 14:47:49 Asia/Ho_Chi_Minh] Remember me set: Success for user admin
+[14-Jan-2025 20:27:30 Asia/Ho_Chi_Minh] Remember me set: Success for user iot
+[15-Jan-2025 07:09:30 Asia/Ho_Chi_Minh] Remember me set: Success for user admin
+[15-Jan-2025 08:37:24 Asia/Ho_Chi_Minh] Remember me set: Success for user admin
+[15-Jan-2025 11:09:38 Asia/Ho_Chi_Minh] Remember me set: Success for user admin
+[15-Jan-2025 13:10:00 Asia/Ho_Chi_Minh] Remember me set: Success for user admin
+[16-Jan-2025 09:08:43 Asia/Ho_Chi_Minh] Remember me set: Success for user HienLV
+[16-Jan-2025 16:26:15 Asia/Ho_Chi_Minh] Remember me set: Success for user TamHV
+[16-Jan-2025 16:32:02 Asia/Ho_Chi_Minh] Remember me set: Success for user ThinNX
+[17-Jan-2025 08:53:25 Asia/Ho_Chi_Minh] Remember me set: Success for user TamHV
+[17-Jan-2025 11:22:02 Asia/Ho_Chi_Minh] Remember me set: Success for user admin
+[17-Jan-2025 13:06:34 Asia/Ho_Chi_Minh] Remember me set: Success for user admin
+[17-Jan-2025 14:26:34 Asia/Ho_Chi_Minh] Remember me set: Success for user admin
+[17-Jan-2025 17:05:03 Asia/Ho_Chi_Minh] Remember me set: Success for user iot
+[17-Jan-2025 19:15:30 Asia/Ho_Chi_Minh] Remember me set: Success for user HienLV
+[20-Jan-2025 06:38:02 Asia/Ho_Chi_Minh] Remember me set: Success for user admin
+[21-Jan-2025 08:16:14 Asia/Ho_Chi_Minh] Remember me set: Success for user Baotricf
+[21-Jan-2025 08:24:40 Asia/Ho_Chi_Minh] Remember me set: Success for user admin
+[06-Feb-2025 08:22:43 Asia/Ho_Chi_Minh] Remember me set: Success for user ttcn
+[07-Feb-2025 08:24:12 Asia/Ho_Chi_Minh] Remember me set: Success for user admin
+[07-Feb-2025 11:04:00 Asia/Ho_Chi_Minh] Remember me set: Success for user admin
+[07-Feb-2025 12:50:29 Asia/Ho_Chi_Minh] Remember me set: Success for user admin
+[07-Feb-2025 22:07:54 Asia/Ho_Chi_Minh] Remember me set: Success for user iot
+[10-Feb-2025 10:57:40 Asia/Ho_Chi_Minh] Remember me set: Success for user admin
+[12-Feb-2025 21:00:00 Asia/Ho_Chi_Minh] Remember me set: Success for user admin
+[13-Feb-2025 14:42:16 Asia/Ho_Chi_Minh] Remember me set: Success for user HienLV
+[13-Feb-2025 14:47:45 Asia/Ho_Chi_Minh] Remember me set: Success for user ktcn
+[15-Feb-2025 09:55:37 Asia/Ho_Chi_Minh] Remember me set: Success for user admin
+[15-Feb-2025 10:00:24 Asia/Ho_Chi_Minh] Remember me set: Success for user Suclv
+[15-Feb-2025 11:09:05 Asia/Ho_Chi_Minh] Remember me set: Success for user admin
+[15-Feb-2025 11:33:58 Asia/Ho_Chi_Minh] Remember me set: Success for user vpf3
+[15-Feb-2025 11:35:32 Asia/Ho_Chi_Minh] Remember me set: Success for user vpf3
+[17-Feb-2025 22:27:47 Asia/Ho_Chi_Minh] Remember me set: Success for user admin
+[18-Feb-2025 13:02:22 Asia/Ho_Chi_Minh] Remember me set: Success for user admin
+[18-Feb-2025 15:53:39 Asia/Ho_Chi_Minh] Remember me set: Success for user AnhHS
+[19-Feb-2025 09:27:54 Asia/Ho_Chi_Minh] Remember me set: Success for user admin
+[19-Feb-2025 09:29:16 Asia/Ho_Chi_Minh] Remember me set: Success for user LinhNT
+[19-Feb-2025 09:36:16 Asia/Ho_Chi_Minh] Remember me set: Success for user LinhNT
+[19-Feb-2025 16:38:32 Asia/Ho_Chi_Minh] Remember me set: Success for user admin
+[22-Feb-2025 06:45:26 Asia/Ho_Chi_Minh] Remember me set: Success for user HienLV
+[25-Feb-2025 00:43:52 Asia/Ho_Chi_Minh] Remember me set: Success for user HienLV
+[27-Feb-2025 09:01:37 Asia/Ho_Chi_Minh] Remember me set: Success for user iot
+[01-Mar-2025 05:48:31 Asia/Ho_Chi_Minh] Remember me set: Success for user iot
+[03-Mar-2025 13:20:52 Asia/Ho_Chi_Minh] Remember me set: Success for user DungNT
+[04-Mar-2025 17:35:22 Asia/Ho_Chi_Minh] Remember me set: Success for user iot
+[06-Mar-2025 11:25:24 Asia/Ho_Chi_Minh] Remember me set: Success for user Longhd
+[06-Mar-2025 19:55:05 Asia/Ho_Chi_Minh] Remember me set: Success for user iot
+[08-Mar-2025 15:51:36 Asia/Ho_Chi_Minh] Remember me set: Success for user admin
+[12-Mar-2025 13:21:18 Asia/Ho_Chi_Minh] Remember me set: Success for user Tv_F2
+[12-Mar-2025 14:34:50 Asia/Ho_Chi_Minh] Remember me set: Success for user Lekhoa
+[12-Mar-2025 21:21:48 Asia/Ho_Chi_Minh] Remember me set: Success for user admin
+[14-Mar-2025 14:12:02 Asia/Ho_Chi_Minh] Remember me set: Success for user iot
+[15-Mar-2025 18:59:52 Asia/Ho_Chi_Minh] Remember me set: Success for user Longhd
+[17-Mar-2025 09:17:36 Asia/Ho_Chi_Minh] Remember me set: Success for user Tv_F2
+[17-Mar-2025 09:51:11 Asia/Ho_Chi_Minh] Remember me set: Success for user Tv_F3
+[17-Mar-2025 13:25:39 Asia/Ho_Chi_Minh] Remember me set: Success for user Tv_F2
+[18-Mar-2025 03:22:11 Asia/Ho_Chi_Minh] Remember me set: Success for user iot
+[18-Mar-2025 12:51:30 Asia/Ho_Chi_Minh] Remember me set: Success for user ktcn
+[18-Mar-2025 16:43:42 Asia/Ho_Chi_Minh] Remember me set: Success for user ktcn
+[19-Mar-2025 09:51:53 Asia/Ho_Chi_Minh] Remember me set: Success for user ktcn
+[19-Mar-2025 13:39:55 Asia/Ho_Chi_Minh] Remember me set: Success for user iot
+[19-Mar-2025 15:58:11 Asia/Ho_Chi_Minh] Remember me set: Success for user ktcn
+[20-Mar-2025 04:39:42 Asia/Ho_Chi_Minh] Remember me set: Success for user ktcn
+[20-Mar-2025 09:32:17 Asia/Ho_Chi_Minh] Remember me set: Success for user ktcn
+[20-Mar-2025 21:34:52 Asia/Ho_Chi_Minh] Remember me set: Success for user ktcn
+[21-Mar-2025 06:25:10 Asia/Ho_Chi_Minh] Remember me set: Success for user ktcn
+[21-Mar-2025 21:27:24 Asia/Ho_Chi_Minh] Remember me set: Success for user ktcn
+[22-Mar-2025 01:27:43 Asia/Ho_Chi_Minh] Remember me set: Success for user ktcn
+[22-Mar-2025 21:30:40 Asia/Ho_Chi_Minh] Remember me set: Success for user ktcn
+[23-Mar-2025 03:16:06 Asia/Ho_Chi_Minh] Remember me set: Success for user ktcn
+[24-Mar-2025 15:19:47 Asia/Ho_Chi_Minh] Remember me set: Success for user HienLV
+[25-Mar-2025 07:20:13 Asia/Ho_Chi_Minh] Remember me set: Success for user ktcn
