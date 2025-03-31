@@ -26,10 +26,10 @@ try {
     // Thêm điều kiện lọc nếu có start_time và end_time
     $whereConditions = [];
     if ($startTime) {
-        $whereConditions[] = "Time >= '" . $conn->real_escape_string($startTime) . "'";
+        $whereConditions[] = "Time >= '" . $conn_F1->real_escape_string($startTime) . "'";
     }
     if ($endTime) {
-        $whereConditions[] = "Time <= '" . $conn->real_escape_string($endTime) . "'";
+        $whereConditions[] = "Time <= '" . $conn_F1->real_escape_string($endTime) . "'";
     }
 
     // Nối điều kiện WHERE nếu có
@@ -40,10 +40,10 @@ try {
     // Sắp xếp và giới hạn
     $query .= " ORDER BY Time ASC LIMIT $limit";
 
-    $result = $conn->query($query);
+    $result = $conn_F1->query($query);
     
     if (!$result) {
-        throw new Exception($conn->error);
+        throw new Exception($conn_F1->error);
     }
 
     // Thu thập dữ liệu

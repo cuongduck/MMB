@@ -22,7 +22,7 @@ try {
             WHERE 1=1 $dateRangeQuery $lineFilter
             ORDER BY Date DESC";
 
-    $stmt = $conn->prepare($sql);
+    $stmt = $conn_F1->prepare($sql);
     if ($line !== 'all') {
         $stmt->bind_param("s", $line);
     }

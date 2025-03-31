@@ -10,10 +10,10 @@ $offset = isset($_GET['offset']) ? intval($_GET['offset']) : 0;
 try {
     // Đếm tổng số bản ghi (không lọc theo period)
     $countQuery = "SELECT COUNT(*) as total FROM FS_trend";
-    $countResult = $conn->query($countQuery);
+    $countResult = $conn_F1->query($countQuery);
     
     if (!$countResult) {
-        throw new Exception($conn->error);
+        throw new Exception($conn_F1->error);
     }
     
     $totalRecords = $countResult->fetch_assoc()['total'];
@@ -27,9 +27,9 @@ try {
     ORDER BY Time ASC 
     LIMIT $limit OFFSET $offset";
     
-    $result = $conn->query($query);
+    $result = $conn_F1->query($query);
     if (!$result) {
-        throw new Exception($conn->error);
+        throw new Exception($conn_F1->error);
     }
     
     // Thu thập dữ liệu

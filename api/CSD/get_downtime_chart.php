@@ -43,11 +43,11 @@ try {
         ORDER BY Line";
     }
 
-    $mainResult = $conn->query($mainQuery);
-    $lineResult = $conn->query($lineQuery);
+    $mainResult = $conn_F1->query($mainQuery);
+    $lineResult = $conn_F1->query($lineQuery);
     
     if (!$mainResult || !$lineResult) {
-        throw new Exception($conn->error);
+        throw new Exception($conn_F1->error);
     }
 
     $data = [

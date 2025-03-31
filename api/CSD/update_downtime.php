@@ -29,7 +29,7 @@ if (isset($data['action']) && $data['action'] === 'delete') {
     }
     
     $sql = "DELETE FROM Downtime WHERE ID = ?";
-    $stmt = $conn->prepare($sql);
+    $stmt = $conn_F1->prepare($sql);
     $stmt->bind_param("i", $data['id']);
     $success = $stmt->execute();
     
@@ -46,7 +46,7 @@ if (isset($data['id']) && isset($data['field']) && isset($data['value'])) {
     }
 
     $sql = "UPDATE Downtime SET {$data['field']} = ? WHERE ID = ?";
-    $stmt = $conn->prepare($sql);
+    $stmt = $conn_F1->prepare($sql);
     $stmt->bind_param("si", $data['value'], $data['id']);
     $success = $stmt->execute();
     

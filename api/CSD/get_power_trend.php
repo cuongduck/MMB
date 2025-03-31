@@ -27,10 +27,10 @@ FROM CSD_So_Dien
     $dateRangeQuery
     ORDER BY Time ASC";
 
-    $result = $conn->query($query);
+    $result = $conn_F1->query($query);
     
     if (!$result) {
-        throw new Exception($conn->error);
+        throw new Exception($conn_F1->error);
     }
 
     $data = [];

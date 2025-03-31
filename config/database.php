@@ -1,8 +1,8 @@
 <?php
 define('DB_HOST', 'localhost');
-define('DB_USER', 'psss');
-define('DB_PASS', 'Mass');
-define('DB_NAME', 'pnless');
+define('DB_USER', 'xxx');
+define('DB_PASS', 'xxx');
+define('DB_NAME', 'pnlekoychosting_Report');
 
 $conn = new mysqli(DB_HOST, DB_USER, DB_PASS, DB_NAME);
 

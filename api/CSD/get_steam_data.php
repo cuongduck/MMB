@@ -81,10 +81,10 @@ try {
                 SUBSTRING(period, 6)
         END";
 
-    $result = $conn->query($baseQuery);
+    $result = $conn_F1->query($baseQuery);
     
     if (!$result) {
-        throw new Exception($conn->error);
+        throw new Exception($conn_F1->error);
     }
 
     $dates = [];

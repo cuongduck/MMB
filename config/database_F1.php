@@ -1,14 +1,15 @@
-<?php
-define('DB_HOST', 'localhost');
-define('DB_USER', 'pnless');
-define('DB_PASS', 'Masss');
-define('DB_NAME', 'pnlekoss');
-
-$conn = new mysqli(DB_HOST, DB_USER, DB_PASS, DB_NAME);
-
-if ($conn->connect_error) {
-    die("Connection failed: " . $conn->connect_error);
-}
-
-$conn->set_charset("utf8mb4");
+<?php
+// File: database_F1.php
+define('DB_HOST_F1', 'localhost'); // Đổi tên biến để tránh xung đột
+define('DB_USER_F1', 'xxx');
+define('DB_PASS_F1', 'xxx');
+define('DB_NAME_F1', 'pnlekoychosting_fs');
+
+$conn_F1 = new mysqli(DB_HOST_F1, DB_USER_F1, DB_PASS_F1, DB_NAME_F1);
+
+if ($conn_F1->connect_error) {
+    die("Connection failed: " . $conn_F1->connect_error);
+}
+
+$conn_F1->set_charset("utf8mb4");
 ?>

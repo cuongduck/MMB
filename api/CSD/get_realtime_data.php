@@ -17,10 +17,10 @@ try {
     FROM CSD_Realtime 
     WHERE ID = 1"; // Giả sử luôn dùng bản ghi ID 1 cho dữ liệu realtime
     
-    $result = $conn->query($query);
+    $result = $conn_F1->query($query);
     
     if (!$result) {
-        throw new Exception($conn->error);
+        throw new Exception($conn_F1->error);
     }
     
     $row = $result->fetch_assoc();

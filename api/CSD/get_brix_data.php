@@ -11,9 +11,9 @@ try {
     ORDER BY Time DESC 
     LIMIT 1000";
 
-    $result = $conn->query($query);
+    $result = $conn_F1->query($query);
     if (!$result) {
-        throw new Exception($conn->error);
+        throw new Exception($conn_F1->error);
     }
 
     // Thu thập dữ liệu
