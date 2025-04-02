@@ -32,7 +32,7 @@ try {
         -- Tổng tiêu hao hơi
         ROUND(
             CASE 
-                WHEN SUM(COALESCE(L1_Tong_Goi, 0) + COALESCE(L2_Tong_Goi, 0) + COALESCE(L3_Tong_Goi, 0)) > 0 
+                WHEN SUM(COALESCE(L1_SL_KH, 0) + COALESCE(L2_SL_KH, 0) + COALESCE(L3_SL_KH, 0)) > 0 
                 THEN (
                     SUM(COALESCE(L1_Hap, 0) + COALESCE(L1_Chien, 0) + 
                         COALESCE(L2_Hap, 0) + COALESCE(L2_Chien, 0) + 
@@ -85,7 +85,7 @@ try {
         -- Tổng tiêu hao hơi
         ROUND(
             CASE 
-                WHEN SUM(COALESCE(L5_Tong_Goi, 0) + COALESCE(L6_Tong_Goi, 0)) > 0 
+                WHEN SUM(COALESCE(L5_SL_KH, 0) + COALESCE(L6_SL_KH, 0)) > 0 
                 THEN (
                     SUM(COALESCE(L5_Hap, 0) + COALESCE(L5_Chien, 0) + 
                         COALESCE(L6_Hap, 0) + COALESCE(L6_Chien, 0)) * 1000.0
@@ -137,7 +137,7 @@ try {
         -- Tổng tiêu hao hơi
         ROUND(
             CASE 
-                WHEN SUM(COALESCE(CSD_SL_thuc_te, 0)) > 0 
+                WHEN SUM(COALESCE(CSD_SL_KH, 0)) > 0 
                 THEN (SUM(COALESCE(CSD_hoi, 0)) * 1000.0) / (SUM(COALESCE(CSD_SL_thuc_te, 0)) * 0.33)
                 ELSE 0 
             END,
@@ -186,7 +186,7 @@ try {
         -- Tổng tiêu hao hơi
         ROUND(
             CASE 
-                WHEN SUM(COALESCE(FS_SL_thuc_te, 0)) > 0 
+                WHEN SUM(COALESCE(FS_SL_KH, 0)) > 0 
                 THEN (SUM(COALESCE(FS_hoi, 0)) * 1000.0) / (SUM(COALESCE(FS_SL_thuc_te, 0)) * 0.33)
                 ELSE 0 
             END,

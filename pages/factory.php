@@ -8,7 +8,7 @@
         <div class="bg-white rounded shadow">
             <div class="p-4">
                 <div class="flex justify-between items-center mb-3">
-                    <h3 class="text-lg font-semibold">F2 - Line 1</h3>
+                    <h3 class="text-lg font-semibold">F2_Line 1</h3>
                     <div id="l1-status" class="status-badge"></div>
                 </div>
                 <div class="mb-4">
@@ -29,7 +29,7 @@
         <div class="bg-white rounded shadow">
             <div class="p-4">
                 <div class="flex justify-between items-center mb-3">
-                    <h3 class="text-lg font-semibold">F2 - Line 2</h3>
+                    <h3 class="text-lg font-semibold">F2_Line 2</h3>
                     <div id="l2-status" class="status-badge"></div>
                 </div>
                 <div class="mb-4">
@@ -50,7 +50,7 @@
         <div class="bg-white rounded shadow">
             <div class="p-4">
                 <div class="flex justify-between items-center mb-3">
-                    <h3 class="text-lg font-semibold">F2 - Line 3</h3>
+                    <h3 class="text-lg font-semibold">F2_Line 3</h3>
                     <div id="l3-status" class="status-badge"></div>
                 </div>
                 <div class="mb-4">
@@ -71,7 +71,7 @@
         <div class="bg-white rounded shadow">
             <div class="p-4">
                 <div class="flex justify-between items-center mb-3">
-                    <h3 class="text-lg font-semibold">F2 - Line 4</h3>
+                    <h3 class="text-lg font-semibold">F2_Line 4</h3>
                     <div id="l4-status" class="status-badge"></div>
                 </div>
                 <div class="mb-4">
@@ -92,7 +92,7 @@
         <div class="bg-white rounded shadow">
             <div class="p-4">
                 <div class="flex justify-between items-center mb-3">
-                    <h3 class="text-lg font-semibold">F3 - Line 5</h3>
+                    <h3 class="text-lg font-semibold">F3_Line 5</h3>
                     <div id="l5-status" class="status-badge"></div>
                 </div>
                 <div class="mb-4">
@@ -113,7 +113,7 @@
         <div class="bg-white rounded shadow">
             <div class="p-4">
                 <div class="flex justify-between items-center mb-3">
-                    <h3 class="text-lg font-semibold">F3 - Line 6</h3>
+                    <h3 class="text-lg font-semibold">F3_Line 6</h3>
                     <div id="l6-status" class="status-badge"></div>
                 </div>
                 <div class="mb-4">
@@ -133,7 +133,7 @@
         <div class="bg-white rounded shadow">
             <div class="p-4">
                 <div class="flex justify-between items-center mb-3">
-                    <h3 class="text-lg font-semibold">F3 - Line 7</h3>
+                    <h3 class="text-lg font-semibold">F3_Line 7</h3>
                     <div id="l7-status" class="status-badge"></div>
                 </div>
                 <div class="mb-4">
@@ -153,7 +153,7 @@
         <div class="bg-white rounded shadow">
             <div class="p-4">
                 <div class="flex justify-between items-center mb-3">
-                    <h3 class="text-lg font-semibold">F3 - Line 8</h3>
+                    <h3 class="text-lg font-semibold">F3_Line 8</h3>
                     <div id="l8-status" class="status-badge"></div>
                 </div>
                 <div class="mb-4">
@@ -255,7 +255,7 @@
                 <svg class="w-5 h-5 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 8v8m-4-5v5m-4-2v2m-2 4h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"/>
                 </svg>
-                <span class="text-gray-600 font-medium">OEE TRUNG BÌNH</span>
+                <span class="text-gray-600 font-medium">OEE NHÀ MÁY</span>
             </div>
             <div class="mb-2">
                 <span id="total-oee" class="text-yellow-500 text-3xl font-bold">0.00%</span>
@@ -295,7 +295,7 @@
             </div>
             <div class="mb-2">
                 <span id="steam-consumption" class="text-blue-600 text-3xl font-bold">0.00</span>
-                <span class="ml-2 px-2 py-1 bg-red-50 text-red-500 text-sm rounded">0.00%</span>
+            <!--     <span class="ml-2 px-2 py-1 bg-red-50 text-red-500 text-sm rounded">0.00%</span>-->
             </div>
             <div class="grid grid-cols-2 gap-2 text-sm">
                 <div class="flex items-center gap-1">
@@ -331,7 +331,7 @@
             </div>
             <div class="mb-2">
                 <span id="power-consumption" class="text-blue-600 text-3xl font-bold">0.00</span>
-                <span class="ml-2 px-2 py-1 bg-red-50 text-red-500 text-sm rounded">0.00%</span>
+               <!--  <span class="ml-2 px-2 py-1 bg-red-50 text-red-500 text-sm rounded">0.00%</span> -->
             </div>
             <div class="grid grid-cols-2 gap-2 text-sm">
                 <div class="flex items-center gap-1">
@@ -358,42 +358,35 @@
         </div>
     </div>
 
-    <!-- Charts -->
-    <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
-        <!-- OEE Chart -->
-        <div class="card">
-            <h3 class="text-lg font-semibold mb-4">OEE Các Xưởng</h3>
-            <div class="chart-container" style="height: 300px;">
-                <canvas id="factoryOEEChart"></canvas>
-            </div>
-        </div>
-        
-        <!-- OEE by Line Chart -->
-        <div class="card">
-            <h3 class="text-lg font-semibold mb-4">OEE Theo Line</h3>
-            <div class="chart-container" style="height: 300px;">
-                <canvas id="oeeByLineChart"></canvas>
-            </div>
-        </div>
-    </div>
 
-    <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
-        <!-- Steam Consumption Chart -->
-        <div class="card">
-            <h3 class="text-lg font-semibold mb-4">Hơi/Sp Theo Xưởng</h3>
-            <div class="chart-container" style="height: 300px;">
-                <canvas id="factorySteamChart"></canvas>
-            </div>
-        </div>
-        
-        <!-- Power Consumption Chart -->
-        <div class="card">
-            <h3 class="text-lg font-semibold mb-4">Điện Năng Theo Xưởng</h3>
-            <div class="chart-container" style="height: 300px;">
-                <canvas id="factoryPowerChart"></canvas>
-            </div>
+<!-- Charts -->
+<div class="grid grid-cols-1 lg:grid-cols-1 gap-6 mb-8">
+    <!-- OEE Chart -->
+    <div class="card">
+        <h3 class="text-lg font-semibold mb-4">OEE Các Xưởng</h3>
+        <div class="chart-container" style="height: 400px;">
+            <canvas id="factoryOEEChart"></canvas>
         </div>
     </div>
+    
+    <!-- OEE by Line Chart -->
+    <div class="card">
+        <h3 class="text-lg font-semibold mb-4">OEE Theo Line</h3>
+        <div class="chart-container" style="height: 400px;">
+            <canvas id="oeeByLineChart"></canvas>
+        </div>
+    </div>
+</div>
+
+   <!-- Steam Consumption Chart -->
+<div class="card mt-6">
+    <h3 class="text-lg font-semibold mb-4">Hơi/SP Các Xưởng</h3>
+    <div class="chart-container" style="height: 400px;">
+        <canvas id="factorySteamChart"></canvas>
+    </div>
+</div>
+        <!-- Power Consumption Chart -->
+
 </div>
 <?php
 include 'includes/footer.php';

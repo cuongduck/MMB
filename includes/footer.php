@@ -1,12 +1,10 @@
-<!-- Load charts in correct order -->
-<!-- <script src="assets/js/MMB/Status_all_lines.js?v=<?php echo time(); ?>"></script>
-<script src="assets/js/MMB/Overview_Factory.js?v=<?php echo time(); ?>"></script>
-<script src="assets/js/MMB/Factory_Charts.js?v=<?php echo time(); ?>"></script>
-<script src="assets/js/MMB/Downtime_Factory.js?v=<?php echo time(); ?>"></script>
-
 <!-- Load main.js last -->
+<script src="assets/js/MMB/Status_all_lines.js?v=<?php echo time(); ?>"></script>
 <script src="assets/js/MMB/Overview_Factory.js?v=<?php echo time(); ?>"></script>
-
+<script src="assets/js/MMB/Factory_OEE_Chart.js?v=<?php echo time(); ?>"></script>
+<script src="assets/js/MMB/OEE_By_Line_Chart.js?v=<?php echo time(); ?>"></script>
+<script src="assets/js/MMB/Factory_Steam_Chart.js?v=<?php echo time(); ?>"></script>
+<script src="assets/js/MMB/Factory_Charts.js?v=<?php echo time(); ?>"></script>
 <script src="assets/js/MMB/Main.js?v=<?php echo time(); ?>"></script>
 
 <?php
