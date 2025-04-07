@@ -121,6 +121,44 @@ echo '<style>
         flex-wrap: wrap;
     }
 }
+/* CSS cho phần thống kê */
+.stats-container {
+    margin-top: 5px;
+    margin-bottom: 5px;
+}
+
+.stat-item {
+    padding: 5px;
+    border-right: 1px solid #eee;
+}
+
+.stat-item:last-child {
+    border-right: none;
+}
+
+.stat-item h3 {
+    font-size: 1.8rem;
+    font-weight: bold;
+    color: #0056b3;
+    margin-top: 8px;
+}
+
+.stat-item h6 {
+    font-size: 0.9rem;
+    margin-bottom: 0;
+}
+
+@media (max-width: 767px) {
+    .stat-item {
+        border-right: none;
+        border-bottom: 1px solid #eee;
+        padding: 5px 0;
+    }
+    
+    .stat-item:last-child {
+        border-bottom: none;
+    }
+}
 </style>';
 
 if (!function_exists('isAdmin')) {
@@ -191,7 +229,39 @@ $selectedFactory = isset($_GET['factory_filter']) ? $_GET['factory_filter'] : 'a
             <?php endif; ?>
         </div>
     </div>
-
+<!-- Thêm phần thống kê -->
+<div class="stats-container my-4">
+    <div class="card">
+        <div class="card-body">
+            <div class="row text-center">
+                <div class="col-md-3">
+                    <div class="stat-item">
+                        <h6 class="text-muted">Line Đang Sản Xuất</h6>
+                        <h3 id="activeLines">0</h3>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="stat-item">
+                        <h6 class="text-muted">Sản Phẩm Đang Chạy</h6>
+                        <h3 id="totalProducts">0</h3>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="stat-item">
+                        <h6 class="text-muted">Tổng Sản Lượng Kế Hoạch</h6>
+                        <h3 id="plannedQuantity">0</h3>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="stat-item">
+                        <h6 class="text-muted">Tổng Sản Lượng Thực Tế</h6>
+                        <h3 id="actualQuantity">0</h3>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
     <!-- Bảng kế hoạch sản xuất -->
     <div class="table-responsive">
         <table class="table table-bordered" id="productionPlanTable">

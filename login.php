@@ -14,13 +14,30 @@ if (isLoggedIn()) {
     if (isset($_SESSION['username']) && $_SESSION['username'] === 'Tv_F2') {
         header('Location: F2/tv.php');
         exit();
-    }elseif ($_SESSION['username'] === 'Tv_F3') {
+    } elseif ($_SESSION['username'] === 'Tv_F3') {
         header('Location: tv.php');
         exit();
     }
-    // Nếu không, redirect đến trang index.php như thông thường
-    header('Location: index.php');
-    exit();
+    
+    // Chuyển hướng dựa vào Brandy của người dùng
+    if (isset($_SESSION['brandy'])) {
+        switch ($_SESSION['brandy']) {
+            case 'Noodle':
+                header('Location: index.php?factory=F2');
+                break;
+            case 'ED':
+                header('Location: index.php?factory=CSD');
+                break;
+            default:
+                header('Location: index.php'); // Mặc định là MMB
+                break;
+        }
+        exit();
+    } else {
+        // Nếu không, redirect đến trang index.php như thông thường
+        header('Location: index.php');
+        exit();
+    }
 }
 
 $error = '';
@@ -69,7 +86,18 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                 } elseif ($user['username'] === 'Tv_F3') {
                     header('Location: tv.php');
                 } else {
-                    header('Location: index.php');
+                    // Chuyển hướng dựa vào Brandy của người dùng
+                    switch ($user['Brandy']) {
+                        case 'Noodle':
+                            header('Location: index.php?factory=F2');
+                            break;
+                        case 'ED':
+                            header('Location: index.php?factory=CSD');
+                            break;
+                        default:
+                            header('Location: index.php'); // Mặc định là MMB
+                            break;
+                    }
                 }
                 exit();
             } else {
@@ -99,7 +127,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                     Đăng nhập hệ thống
                 </h2>
                 <p class="mt-2 text-center text-sm text-gray-600">
-                     IoT Xưởng Mì MMB
+                     IoT MMB
                 </p>
             </div>
             

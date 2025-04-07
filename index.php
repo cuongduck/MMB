@@ -2,13 +2,47 @@
 require_once 'includes/auth.php';
 require_once 'config/database.php';
 requireLogin();
-include 'includes/header.php';
 
-// Lấy factory từ parameter URL
-$factory = isset($_GET['factory']) ? $_GET['factory'] : 'MMB'; // Giữ giá trị mặc định là 'MMB'
+// Xác định factory mặc định dựa trên Brandy của người dùng
+$defaultFactory = 'MMB'; // Mặc định
+if (isset($_SESSION['brandy'])) {
+    switch ($_SESSION['brandy']) {
+        case 'Noodle':
+            $defaultFactory = 'F2';
+            break;
+        case 'ED':
+            $defaultFactory = 'CSD';
+            break;
+        default:
+            $defaultFactory = 'MMB';
+            break;
+    }
+}
+
+// Lấy factory từ parameter URL, nếu không có thì dùng mặc định
+$factory = isset($_GET['factory']) ? $_GET['factory'] : $defaultFactory;
+
+// Kiểm tra quyền truy cập vào factory
+$hasAccess = true;
+
+if (isset($_SESSION['brandy']) && $_SESSION['brandy'] != 'Chung' && !isAdmin()) {
+    // Người dùng Noodle chỉ được xem F2, F3
+    if ($_SESSION['brandy'] == 'Noodle' && !in_array($factory, ['F2', 'F3'])) {
+        $hasAccess = false;
+        $factory = 'F2'; // Chuyển hướng về F2
+    }
+    // Người dùng ED chỉ được xem CSD, FS
+    elseif ($_SESSION['brandy'] == 'ED' && !in_array($factory, ['CSD', 'FS'])) {
+        $hasAccess = false;
+        $factory = 'CSD'; // Chuyển hướng về CSD
+    }
+}
 
 // Kiểm tra route
 $page = isset($_GET['page']) ? $_GET['page'] : 'factory';
+
+// Include header.php
+include 'includes/header.php';
 
 // Load trang tương ứng
 switch($page) {

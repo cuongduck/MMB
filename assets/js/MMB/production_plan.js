@@ -737,7 +737,82 @@ function openEditModal(plan) {
             alert('Đã xảy ra lỗi khi xóa kế hoạch');
         });
     }
+   // Hàm tải thống kê sản xuất
+function loadProductionStats() {
+    let filterType = currentTab;
+    let filterValue = '';
     
+    // Lấy giá trị bộ lọc tùy theo tab
+    switch (filterType) {
+        case 'daily':
+            const dateFilter = document.getElementById('dateFilter');
+            filterValue = dateFilter ? dateFilter.value : new Date().toISOString().split('T')[0];
+            break;
+        case 'weekly':
+            const weekFilter = document.getElementById('weekFilter');
+            filterValue = weekFilter ? weekFilter.value : getDefaultWeek();
+            break;
+        case 'monthly':
+            const monthFilter = document.getElementById('monthFilter');
+            filterValue = monthFilter ? monthFilter.value : new Date().toISOString().slice(0, 7);
+            break;
+    }
+    
+    // Thêm tham số factory_filter vào URL API
+    const apiUrl = `api/MMB/production_plan.php?action=get_stats&filter_type=${filterType}&filter_value=${filterValue}&factory_filter=${selectedFactory}`;
+    
+    return fetch(apiUrl)
+        .then(response => response.json())
+        .then(data => {
+            if (data.status === 'success') {
+                updateStatsDisplay(data.data);
+            }
+        })
+        .catch(error => console.error('Error loading production stats:', error));
+}
+
+// Hàm cập nhật hiển thị thống kê
+function updateStatsDisplay(stats) {
+    document.getElementById('activeLines').textContent = stats.active_lines.toLocaleString();
+    document.getElementById('totalProducts').textContent = stats.total_products.toLocaleString();
+    document.getElementById('plannedQuantity').textContent = stats.total_planned_quantity.toLocaleString();
+    document.getElementById('actualQuantity').textContent = stats.total_actual_quantity.toLocaleString();
+}
+  // Hàm tải kế hoạch sản xuất
+function loadProductionPlans() {
+    let filterType = currentTab;
+    let filterValue = '';
+    
+    // Lấy giá trị bộ lọc tùy theo tab
+    switch (filterType) {
+        case 'daily':
+            const dateFilter = document.getElementById('dateFilter');
+            filterValue = dateFilter ? dateFilter.value : new Date().toISOString().split('T')[0];
+            break;
+        case 'weekly':
+            const weekFilter = document.getElementById('weekFilter');
+            filterValue = weekFilter ? weekFilter.value : getDefaultWeek();
+            break;
+        case 'monthly':
+            const monthFilter = document.getElementById('monthFilter');
+            filterValue = monthFilter ? monthFilter.value : new Date().toISOString().slice(0, 7);
+            break;
+    }
+    
+    // Thêm tham số factory_filter vào URL API
+    const apiUrl = `api/MMB/production_plan.php?action=get_plans&filter_type=${filterType}&filter_value=${filterValue}&factory_filter=${selectedFactory}`;
+    
+    return fetch(apiUrl)
+        .then(response => response.json())
+        .then(data => {
+            if (data.status === 'success') {
+                renderProductionPlans(data.data);
+                // Tải thống kê sau khi tải kế hoạch
+                return loadProductionStats();
+            }
+        })
+        .catch(error => console.error('Error loading production plans:', error));
+}
     // Các hàm tiện ích
     
     // Định dạng thời gian cho hiển thị

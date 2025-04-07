@@ -37,6 +37,9 @@ switch ($action) {
     case 'get_plans':
         getProductionPlans();
         break;
+    case 'get_stats':
+        getProductionStats();
+    break;    
     case 'check_overlap':
         checkTimeOverlap();
         break;
@@ -495,7 +498,105 @@ function updateProductionPlan() {
         echo json_encode(['status' => 'error', 'message' => 'Lỗi: ' . $conn->error]);
     }
 }
+// Hàm lấy thống kê sản xuất
+function getProductionStats() {
+    global $conn;
+    
+    $filter_type = isset($_GET['filter_type']) ? $_GET['filter_type'] : 'daily';
+    $filter_value = isset($_GET['filter_value']) ? $_GET['filter_value'] : date('Y-m-d');
+    $factory_filter = isset($_GET['factory_filter']) ? $_GET['factory_filter'] : 'all';
+    
+    // Xây dựng điều kiện WHERE tùy theo loại bộ lọc thời gian
+    $where_clause = "";
 
+    switch ($filter_type) {
+        case 'daily':
+            $date = $conn->real_escape_string($filter_value);
+            $where_clause = "DATE(p.start_time) = '$date' OR DATE(p.end_time) = '$date' OR ('$date' BETWEEN DATE(p.start_time) AND DATE(p.end_time))";
+            break;
+        case 'weekly':
+            // Format: YYYY-Www (e.g., 2025-W14)
+            if (preg_match('/^(\d{4})-W(\d{1,2})$/', $filter_value, $matches)) {
+                $year = $matches[1];
+                $week = $matches[2];
+                $where_clause = "(YEAR(p.start_time) = $year AND WEEK(p.start_time, 1) = $week) OR (YEAR(p.end_time) = $year AND WEEK(p.end_time, 1) = $week)";
+            }
+            break;
+        case 'monthly':
+            // Format: YYYY-MM (e.g., 2025-04)
+            if (preg_match('/^(\d{4})-(\d{1,2})$/', $filter_value, $matches)) {
+                $year = $matches[1];
+                $month = $matches[2];
+                $where_clause = "(YEAR(p.start_time) = $year AND MONTH(p.start_time) = $month) OR (YEAR(p.end_time) = $year AND MONTH(p.end_time) = $month)";
+            }
+            break;
+    }
+
+    if (empty($where_clause)) {
+        $where_clause = "DATE(p.start_time) = CURDATE() OR DATE(p.end_time) = CURDATE()";
+    }
+
+    // Thêm điều kiện lọc theo xưởng
+    $factory_condition = "";
+    switch ($factory_filter) {
+        case 'f2':
+            $factory_condition = "AND l.factory = 'Noodle' AND l.line_code IN ('LINE1', 'LINE2', 'LINE3', 'LINE4')";
+            break;
+        case 'f3':
+            $factory_condition = "AND l.factory = 'Noodle' AND l.line_code IN ('LINE5', 'LINE6', 'LINE7', 'LINE8')";
+            break;
+        case 'f1':
+            $factory_condition = "AND (l.factory = 'ED' OR l.factory = 'FS')";
+            break;
+        default:
+            $factory_condition = "";
+            break;
+    }
+
+    // 1. Truy vấn tổng số line đang sản xuất
+    $query_lines = "SELECT COUNT(DISTINCT p.line_id) as active_lines
+                   FROM production_plans p
+                   JOIN production_lines l ON p.line_id = l.id
+                   WHERE ($where_clause) $factory_condition";
+    
+    $result_lines = $conn->query($query_lines);
+    $lines_data = $result_lines->fetch_assoc();
+    $active_lines = $lines_data['active_lines'];
+    
+    // 2. Truy vấn tổng số sản phẩm đang chạy
+    $query_products = "SELECT COUNT(DISTINCT p.product_id) as total_products
+                      FROM production_plans p
+                      JOIN production_lines l ON p.line_id = l.id
+                      WHERE ($where_clause) $factory_condition";
+    
+    $result_products = $conn->query($query_products);
+    $products_data = $result_products->fetch_assoc();
+    $total_products = $products_data['total_products'];
+    
+    // 3. Truy vấn tổng sản lượng theo kế hoạch
+    $query_quantity = "SELECT SUM(p.planned_quantity) as total_planned_quantity,
+                              SUM(p.actual_quantity) as total_actual_quantity
+                       FROM production_plans p
+                       JOIN production_lines l ON p.line_id = l.id
+                       WHERE ($where_clause) $factory_condition";
+    
+    $result_quantity = $conn->query($query_quantity);
+    $quantity_data = $result_quantity->fetch_assoc();
+    $total_planned_quantity = $quantity_data['total_planned_quantity'] ?: 0;
+    $total_actual_quantity = $quantity_data['total_actual_quantity'] ?: 0;
+    
+    // Gửi phản hồi JSON
+    header('Content-Type: application/json');
+    echo json_encode([
+        'status' => 'success',
+        'data' => [
+            'active_lines' => $active_lines,
+            'total_products' => $total_products,
+            'total_planned_quantity' => $total_planned_quantity,
+            'total_actual_quantity' => $total_actual_quantity
+        ]
+    ]);
+}
 // Xóa kế hoạch sản xuất
 function deleteProductionPlan() {
     global $conn, $cache_dir;
