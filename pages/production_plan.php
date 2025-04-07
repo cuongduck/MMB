@@ -100,6 +100,27 @@ echo '<style>
     color: #0056b3;
     text-decoration: none;
 }
+
+/* Thêm CSS cho loading indicator */
+.loading-indicator {
+    text-align: center;
+    padding: 20px;
+    font-size: 1.2em;
+    color: #666;
+}
+
+/* Cải thiện khả năng hiển thị trên các màn hình nhỏ */
+@media (max-width: 767px) {
+    .controls-row {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+    
+    .factory-tabs, .filter-controls {
+        margin-bottom: 10px;
+        flex-wrap: wrap;
+    }
+}
 </style>';
 
 if (!function_exists('isAdmin')) {
@@ -125,8 +146,6 @@ if (!function_exists('isAdmin')) {
         return isset($_SESSION['group_member']) && $_SESSION['group_member'] == 'Full_Control';
     }
 }
-
-
 // Kiểm tra tab đang xem - lấy từ URL
 $currentTab = isset($_GET['tab']) ? $_GET['tab'] : 'daily';
 
@@ -161,9 +180,14 @@ $selectedFactory = isset($_GET['factory_filter']) ? $_GET['factory_filter'] : 'a
             </div>
             
             <?php if (isAdmin()): ?>
-            <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#addPlanModal">
-                <i class="fas fa-plus"></i> Thêm Kế Hoạch
-            </button>
+            <div class="ml-2">
+                <a href="?page=line_product_management" class="btn btn-outline-info mr-2">
+                    <i class="fas fa-cog"></i> Quản lý Sản Phẩm
+                </a>
+                <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#addPlanModal">
+                    <i class="fas fa-plus"></i> Thêm Kế Hoạch
+                </button>
+            </div>
             <?php endif; ?>
         </div>
     </div>
@@ -174,12 +198,13 @@ $selectedFactory = isset($_GET['factory_filter']) ? $_GET['factory_filter'] : 'a
             <thead class="thead-dark">
                 <tr>
                     <th>Line</th>
-                    <th>Sản Phẩm</th>
-                    <th>Thời Gian Bắt Đầu</th>
-                    <th>Thời Gian Kết Thúc</th>
-                    <th>Kế Hoạch (Carton)</th>
-                    <th>Thực Tế (Carton)</th>
-                    <th>Tổng Nhân Sự</th>
+                    <th>Mã SP</th> <!-- Thêm cột mã sản phẩm -->
+                    <th>Tên Sản Phẩm</th>
+                    <th>Thời gian bắt đầu</th>
+                    <th>Thời gian kết thúc</th>
+                    <th>SL KH</th>
+                    <th>SL Thực tê</th>
+                    <th>Nhân Sự</th>
                     <th>Ghi Chú</th>
                     <?php if (isAdmin()): ?>
                     <th>Hành Động</th>
@@ -188,11 +213,13 @@ $selectedFactory = isset($_GET['factory_filter']) ? $_GET['factory_filter'] : 'a
             </thead>
             <tbody id="planTableBody">
                 <!-- Dữ liệu sẽ được nạp bằng AJAX -->
+                <tr>
+                    <td colspan="10" class="text-center">Đang tải dữ liệu...</td>
+                </tr>
             </tbody>
         </table>
     </div>
 </div>
-
 <!-- Modal Thêm Kế Hoạch -->
 <?php if (isAdmin()): ?>
 <div class="modal fade" id="addPlanModal" tabindex="-1" role="dialog" aria-labelledby="addPlanModalLabel" aria-hidden="true">
@@ -224,21 +251,21 @@ $selectedFactory = isset($_GET['factory_filter']) ? $_GET['factory_filter'] : 'a
                     </div>
                     <div class="form-row">
                         <div class="form-group col-md-6">
-                            <label for="start_time">Thời Gian Bắt Đầu</label>
+                            <label for="start_time">Thời gian bắt đầu</label>
                             <input type="datetime-local" class="form-control" id="start_time" name="start_time" required>
                         </div>
                         <div class="form-group col-md-6">
-                            <label for="end_time">Thời Gian Kết Thúc</label>
+                            <label for="end_time">Thời gian kết thúc</label>
                             <input type="datetime-local" class="form-control" id="end_time" name="end_time" required>
                         </div>
                     </div>
                     <div class="form-row">
                         <div class="form-group col-md-6">
-                            <label for="planned_quantity">Kế Hoạch Sản Lượng (Carton)</label>
+                            <label for="planned_quantity">SL Kế hoạch (g/l)</label>
                             <input type="number" class="form-control" id="planned_quantity" name="planned_quantity" min="1" required>
                         </div>
                         <div class="form-group col-md-6">
-                            <label for="total_personnel">Tổng Số Nhân Sự</label>
+                            <label for="total_personnel">Nhân Sự</label>
                             <input type="number" class="form-control" id="total_personnel" name="total_personnel" min="0">
                         </div>
                     </div>
@@ -264,7 +291,7 @@ $selectedFactory = isset($_GET['factory_filter']) ? $_GET['factory_filter'] : 'a
     <div class="modal-dialog modal-lg" role="document">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="editPlanModalLabel">Chỉnh Sửa Kế Hoạch Sản Xuất</h5>
+                <h5 class="modal-title" id="editPlanModalLabel">Chỉnh Sửa KHSX</h5>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
@@ -290,27 +317,27 @@ $selectedFactory = isset($_GET['factory_filter']) ? $_GET['factory_filter'] : 'a
                     </div>
                     <div class="form-row">
                         <div class="form-group col-md-6">
-                            <label for="edit_start_time">Thời Gian Bắt Đầu</label>
+                            <label for="edit_start_time">Time Bắt Đầu</label>
                             <input type="datetime-local" class="form-control" id="edit_start_time" name="start_time" required>
                         </div>
                         <div class="form-group col-md-6">
-                            <label for="edit_end_time">Thời Gian Kết Thúc</label>
+                            <label for="edit_end_time">Time Kết Thúc</label>
                             <input type="datetime-local" class="form-control" id="edit_end_time" name="end_time" required>
                         </div>
                     </div>
                     <div class="form-row">
                         <div class="form-group col-md-6">
-                            <label for="edit_planned_quantity">Kế Hoạch Sản Lượng (Carton)</label>
+                            <label for="edit_planned_quantity">SL KH (g/l)</label>
                             <input type="number" class="form-control" id="edit_planned_quantity" name="planned_quantity" min="1" required>
                         </div>
                         <div class="form-group col-md-6">
-                            <label for="edit_actual_quantity">Sản Lượng Thực Tế (Carton)</label>
+                            <label for="edit_actual_quantity">SL Thực Tế (g/l)</label>
                             <input type="number" class="form-control" id="edit_actual_quantity" name="actual_quantity" min="0">
                         </div>
                     </div>
                     <div class="form-row">
                         <div class="form-group col-md-6">
-                            <label for="edit_total_personnel">Tổng Số Nhân Sự</label>
+                            <label for="edit_total_personnel">Total Nhân sự</label>
                             <input type="number" class="form-control" id="edit_total_personnel" name="total_personnel" min="0">
                         </div>
                         <div class="form-group col-md-6">

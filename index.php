@@ -15,6 +15,9 @@ switch($page) {
     case 'production_plan':
         include 'pages/production_plan.php';
         break;
+    case 'line_product_management': // Thêm case này
+        include 'pages/line_product_management.php';
+        break;        
     case 'line_details':
         include 'pages/line_details.php';
         break;

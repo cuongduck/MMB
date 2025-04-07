@@ -1,0 +1,11 @@
+SELECT p.id, p.line_id, p.product_id, p.start_time, p.end_time, 
+          p.planned_quantity, p.actual_quantity, p.total_personnel, p.notes, p.created_by, p.created_at,
+          l.line_name, l.line_code, l.factory,
+          pr.product_name, pr.product_code, pr.product_group, pr.color_code,
+          u.username as created_by_name
+          FROM production_plans p
+          JOIN production_lines l ON p.line_id = l.id
+          JOIN products pr ON p.product_id = pr.id
+          JOIN users u ON p.created_by = u.id
+          WHERE (DATE(p.start_time) = '2025-04-07' OR DATE(p.end_time) = '2025-04-07' OR ('2025-04-07' BETWEEN DATE(p.start_time) AND DATE(p.end_time))) 
+          ORDER BY l.line_name, p.start_time
