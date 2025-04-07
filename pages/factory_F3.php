@@ -401,7 +401,7 @@
     </div>
 </div>
 
-<!-- Power Usage Table -->
+<!-- Power Usage Table
 <div class="card mt-6">
     <div class="flex justify-between items-center mb-4">
         <h3 class="text-lg font-semibold">Chi Tiết Điện năng hộ tiêu thụ</h3>
@@ -427,7 +427,6 @@
                 </tr>
             </thead>
             <tbody id="powerTableContent">
-                <!-- Dữ liệu sẽ được thêm vào đây bằng JavaScript -->
             </tbody>
         </table>
     </div>

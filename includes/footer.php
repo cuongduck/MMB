@@ -4,6 +4,8 @@
 <script src="assets/js/MMB/Factory_OEE_Chart.js?v=<?php echo time(); ?>"></script>
 <script src="assets/js/MMB/OEE_By_Line_Chart.js?v=<?php echo time(); ?>"></script>
 <script src="assets/js/MMB/Factory_Steam_Chart.js?v=<?php echo time(); ?>"></script>
+<script src="assets/js/MMB/Power_Donut_Chart.js?v=<?php echo time(); ?>"></script>
+<script src="assets/js/MMB/Power_Line_Chart.js?v=<?php echo time(); ?>"></script>
 <script src="assets/js/MMB/Factory_Charts.js?v=<?php echo time(); ?>"></script>
 <script src="assets/js/MMB/Main.js?v=<?php echo time(); ?>"></script>
 

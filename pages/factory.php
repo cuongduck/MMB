@@ -385,7 +385,31 @@
         <canvas id="factorySteamChart"></canvas>
     </div>
 </div>
-        <!-- Power Consumption Chart -->
+<div class="mt-6"></div>
+
+<!-- Container cho 2 biểu đồ điện năng -->
+<div class="grid grid-cols-1 lg:grid-cols-12 gap-6 mb-6">
+    <!-- Power Donut Chart -->
+    <div class="lg:col-span-4">
+        <div class="card">
+            <h3 class="text-lg font-semibold mb-4">Điện Năng Theo Khu Vực</h3>
+            <div class="chart-container" style="height: 320px;">
+                <canvas id="powerDonutChart"></canvas>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Power Line Chart -->
+    <div class="lg:col-span-8">
+        <div class="card">
+            <h3 class="text-lg font-semibold mb-4">Trend Theo Thời Gian</h3>
+            <div class="chart-container" style="height: 320px;">
+                <canvas id="powerLineChart"></canvas>
+            </div>
+        </div>
+    </div>
+</div>
+
 
 </div>
 <?php

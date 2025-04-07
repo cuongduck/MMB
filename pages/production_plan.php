@@ -1,170 +1,342 @@
-<?php
-require_once 'config/database.php';
-?>
-
-<!DOCTYPE html>
-<html lang="vi">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Kế Hoạch Sản Xuất</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <script src="https://unpkg.com/react@17/umd/react.production.min.js"></script>
-    <script src="https://unpkg.com/react-dom@17/umd/react-dom.production.min.js"></script>
-</head>
-<body class="bg-gray-100">
-    <div class="container mx-auto px-4 py-8">
-        <h1 class="text-3xl font-bold text-center mb-8">Kế Hoạch Sản Xuất</h1>
-        
-        <div class="space-y-4">
-            <?php
-            $lines = ['Line 1', 'Line 2', 'Line 3', 'Line 4', 'Line 5', 'Line 6', 'Line 7', 'Line 8'];
-            foreach ($lines as $line) {
-                $query = "SELECT * FROM KHSX WHERE Line = ? ORDER BY Tu_ngay DESC LIMIT 1";
-                $stmt = $conn->prepare($query);
-                $stmt->bind_param("s", $line);
-                $stmt->execute();
-                $result = $stmt->get_result();
-                $plan = $result->fetch_assoc();
-                
-                // Xác định trạng thái
-                $status = 'bg-yellow-500'; // pending
-                $statusText = 'Chưa bắt đầu';
-                if ($plan) {
-                    $now = new DateTime();
-                    $start = new DateTime($plan['Tu_ngay']);
-                    $end = new DateTime($plan['den_ngay']);
-                    
-                    if ($now > $end) {
-                        $status = 'bg-gray-500';
-                        $statusText = 'Đã hoàn thành';
-                    } elseif ($now >= $start && $now <= $end) {
-                        $status = 'bg-green-500';
-                        $statusText = 'Đang sản xuất';
-                    }
-                }
-            ?>
-            <div class="bg-white rounded-lg shadow-md p-6" 
-     data-id="<?php echo $plan ? $plan['id'] : ''; ?>"
-     data-start-time="<?php echo $plan ? date('Y-m-d H:i:s', strtotime($plan['Tu_ngay'])) : ''; ?>"
-     data-end-time="<?php echo $plan ? date('Y-m-d H:i:s', strtotime($plan['den_ngay'])) : ''; ?>"
-     id="plan-<?php echo $line; ?>">
-                <div class="flex items-center justify-between">
-                    <div class="flex items-center space-x-2">
-                        <span class="font-bold text-lg"><?php echo $line; ?></span>
-                        <div class="<?php echo $status; ?> w-3 h-3 rounded-full" title="<?php echo $statusText; ?>"></div>
-                    </div>
-                    <button onclick="editPlan('<?php echo $line; ?>')" 
-                            class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 transition-colors">
-                        Chỉnh sửa
-                    </button>
-                </div>
-                
-                <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mt-4">
-                    <div>
-                        <span class="font-semibold">Sản phẩm:</span>
-                        <span id="product-<?php echo $line; ?>" class="ml-2">
-                            <?php echo $plan ? htmlspecialchars($plan['Ten_sp']) : 'Chưa có kế hoạch'; ?>
-                        </span>
-                    </div>
-                    <div>
-                        <span class="font-semibold">Sản lượng:</span>
-                        <span id="quantity-<?php echo $line; ?>" class="ml-2">
-                            <?php echo $plan ? number_format($plan['San_luong'], 2) : '0'; ?> Gói
-                        </span>
-                    </div>
-                    <div>
-                        <span class="font-semibold">Thời gian:</span>
-                        <span id="time-<?php echo $line; ?>" class="ml-2">
-                            <?php 
-                            if ($plan) {
-                                echo date('H:i d/m/Y', strtotime($plan['Tu_ngay'])) . ' - ' . 
-                                     date('H:i d/m/Y', strtotime($plan['den_ngay']));
-                            } else {
-                                echo 'N/A';
-                            }
-                            ?>
-                        </span>
-                    </div>
-                </div>
-
-                <!-- Timeline container -->
-                <div id="timeline-<?php echo $line; ?>" class="mt-4"></div>
-            </div>
-            <?php } ?>
-        </div>
-    </div>
-
-    <!-- Modal -->
-    <div id="editModal" class="hidden fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full z-50">
-        <div class="relative top-20 mx-auto p-5 border w-96 shadow-lg rounded-md bg-white z-[51]">
-            <div class="mt-3">
-                <h3 class="text-lg font-medium leading-6 text-gray-900 mb-4">Chỉnh Sửa Kế Hoạch</h3>
-                <form id="editForm" class="space-y-4">
-                    <input type="hidden" id="line_number" name="Line">
-                    <input type="hidden" id="plan_id" name="id">
-                    
-                    <div>
-                        <label class="block text-sm font-medium text-gray-700">Tên sản phẩm</label>
-                        <input type="text" id="product_name" name="Ten_sp" 
-                               class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500">
-                    </div>
-                    
-                    <div>
-                        <label class="block text-sm font-medium text-gray-700">Sản lượng (Gói)</label>
-                        <input type="number" step="0.01" id="quantity" name="San_luong" 
-                               class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500">
-                    </div>
-                    
-                    <div>
-                        <label class="block text-sm font-medium text-gray-700">Thời gian bắt đầu</label>
-                        <input type="datetime-local" id="start_time" name="Tu_ngay" 
-                               class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500">
-                    </div>
-                    
-                    <div>
-                        <label class="block text-sm font-medium text-gray-700">Thời gian kết thúc</label>
-                        <input type="datetime-local" id="end_time" name="den_ngay" 
-                               class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500">
-                    </div>
-                    
-                    <div class="flex justify-end space-x-3">
-                        <button type="button" onclick="closeModal()" 
-                                class="bg-gray-200 px-4 py-2 rounded hover:bg-gray-300 transition-colors">
-                            Đóng
-                        </button>
-                        <button type="button" onclick="savePlan()" 
-                                class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 transition-colors">
-                            Lưu
-                        </button>
-                    </div>
-                </form>
-            </div>
-        </div>
-    </div>
-
-    <!-- Timeline Script -->
-    <script src="assets/js/timeline.js?v=<?php echo time(); ?>"></script>
-<!-- Khởi tạo timeline -->
-    <script>
-    document.addEventListener('DOMContentLoaded', () => {
-        <?php
-        // Reset con trỏ kết quả về đầu
-        mysqli_data_seek($result, 0);
-        foreach ($lines as $line) {
-            $query = "SELECT * FROM KHSX WHERE Line = ? ORDER BY Tu_ngay DESC LIMIT 1";
-            $stmt = $conn->prepare($query);
-            $stmt->bind_param("s", $line);
-            $stmt->execute();
-            $result = $stmt->get_result();
-            $plan = $result->fetch_assoc();
-        ?>
-            initializeTimeline('<?php echo $line; ?>', <?php echo json_encode($plan); ?>);
-        <?php } ?>
-    });
-    </script>
-
-    <!-- Modal Functions -->
-    <script src="assets/js/modal.js?v=<?php echo time(); ?>"></script>
-</body>
-</html>
+<?php
+// pages/production_plan.php
+// Thêm vào đầu file pages/production_plan.php
+// CSS inline để đẩy nội dung xuống dưới header
+// Thêm CSS cho production_plan.php để khớp với giao diện mới
+echo '<style>
+/* Định dạng tổng thể */
+.container {
+    margin-top: 100px !important;
+    padding-top: 20px;
+    max-width: 100%;
+    padding-left: 30px;
+    padding-right: 30px;
+}
+
+/* Định dạng tiêu đề và menu tab */
+.page-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.page-title {
+    font-size: 24px;
+    font-weight: bold;
+    color: #0056b3;
+}
+
+.tab-buttons {
+    display: flex;
+    gap: 10px;
+}
+
+.tab-btn {
+    background-color: #fff;
+    border: 1px solid #ddd;
+    padding: 8px 16px;
+    border-radius: 5px;
+    cursor: pointer;
+    text-decoration: none;
+    color: #333;
+}
+
+.tab-btn.active {
+    background-color: #0056b3;
+    color: #fff;
+    border-color: #0056b3;
+}
+
+/* Định dạng bộ lọc xưởng và nút thêm kế hoạch */
+.controls-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.factory-tabs {
+    display: flex;
+    gap: 10px;
+}
+
+.factory-tab {
+    background-color: #f0f0f0;
+    border: 1px solid #ddd;
+    padding: 6px 14px;
+    border-radius: 5px;
+    cursor: pointer;
+    text-decoration: none;
+    color: #333;
+}
+
+.factory-tab.active {
+    background-color: #4CAF50;
+    color: white;
+    border-color: #4CAF50;
+}
+
+/* Định dạng bộ lọc thời gian */
+.filter-controls {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.filter-input {
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    padding: 6px 12px;
+}
+
+/* Định dạng bảng */
+.table-responsive {
+    margin-top: 10px;
+}
+
+/* Định dạng nút sửa */
+.edit-btn {
+    color: #0056b3;
+    text-decoration: none;
+}
+</style>';
+
+if (!function_exists('isAdmin')) {
+    function isAdmin() {
+        // Đảm bảo thông tin quyền được tải
+        if (!isset($_SESSION['group_member']) && isset($_SESSION['user_id'])) {
+            global $conn;
+            $user_id = $_SESSION['user_id'];
+            
+            $sql = "SELECT username, Group_member, Brandy FROM users WHERE id = ?";
+            $stmt = $conn->prepare($sql);
+            $stmt->bind_param("i", $user_id);
+            $stmt->execute();
+            $result = $stmt->get_result();
+            
+            if ($user = $result->fetch_assoc()) {
+                $_SESSION['username'] = $user['username'];
+                $_SESSION['group_member'] = $user['Group_member'];
+                $_SESSION['brandy'] = $user['Brandy'];
+            }
+        }
+    
+        return isset($_SESSION['group_member']) && $_SESSION['group_member'] == 'Full_Control';
+    }
+}
+
+
+// Kiểm tra tab đang xem - lấy từ URL
+$currentTab = isset($_GET['tab']) ? $_GET['tab'] : 'daily';
+
+// Kiểm tra và xử lý tham số factory từ URL
+$selectedFactory = isset($_GET['factory_filter']) ? $_GET['factory_filter'] : 'all';
+?>
+
+<div class="container">
+    <!-- Tab lọc theo xưởng và nút thêm kế hoạch + bộ lọc -->
+    <div class="controls-row">
+        <div class="factory-tabs">
+            <a href="?page=production_plan&tab=<?php echo $currentTab; ?>&factory_filter=all" 
+               class="factory-tab <?php echo $selectedFactory == 'all' ? 'active' : ''; ?>">Tất cả</a>
+            <a href="?page=production_plan&tab=<?php echo $currentTab; ?>&factory_filter=f2" 
+               class="factory-tab <?php echo $selectedFactory == 'f2' ? 'active' : ''; ?>">Mì_F2</a>
+            <a href="?page=production_plan&tab=<?php echo $currentTab; ?>&factory_filter=f3" 
+               class="factory-tab <?php echo $selectedFactory == 'f3' ? 'active' : ''; ?>">Mì_F3</a>
+            <a href="?page=production_plan&tab=<?php echo $currentTab; ?>&factory_filter=f1" 
+               class="factory-tab <?php echo $selectedFactory == 'f1' ? 'active' : ''; ?>">F1</a>
+        </div>
+        
+        <div class="d-flex align-items-center">
+            <div class="filter-controls mr-3">
+                <?php if ($currentTab == 'daily'): ?>
+                <input type="date" id="dateFilter" class="filter-input" value="<?php echo date('Y-m-d'); ?>">
+                <?php elseif ($currentTab == 'weekly'): ?>
+                <input type="week" id="weekFilter" class="filter-input" value="<?php echo date('Y').'-W'.date('W'); ?>">
+                <?php elseif ($currentTab == 'monthly'): ?>
+                <input type="month" id="monthFilter" class="filter-input" value="<?php echo date('Y-m'); ?>">
+                <?php endif; ?>
+                <button class="btn btn-outline-secondary" id="filterBtn">Lọc</button>
+            </div>
+            
+            <?php if (isAdmin()): ?>
+            <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#addPlanModal">
+                <i class="fas fa-plus"></i> Thêm Kế Hoạch
+            </button>
+            <?php endif; ?>
+        </div>
+    </div>
+
+    <!-- Bảng kế hoạch sản xuất -->
+    <div class="table-responsive">
+        <table class="table table-bordered" id="productionPlanTable">
+            <thead class="thead-dark">
+                <tr>
+                    <th>Line</th>
+                    <th>Sản Phẩm</th>
+                    <th>Thời Gian Bắt Đầu</th>
+                    <th>Thời Gian Kết Thúc</th>
+                    <th>Kế Hoạch (Carton)</th>
+                    <th>Thực Tế (Carton)</th>
+                    <th>Tổng Nhân Sự</th>
+                    <th>Ghi Chú</th>
+                    <?php if (isAdmin()): ?>
+                    <th>Hành Động</th>
+                    <?php endif; ?>
+                </tr>
+            </thead>
+            <tbody id="planTableBody">
+                <!-- Dữ liệu sẽ được nạp bằng AJAX -->
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<!-- Modal Thêm Kế Hoạch -->
+<?php if (isAdmin()): ?>
+<div class="modal fade" id="addPlanModal" tabindex="-1" role="dialog" aria-labelledby="addPlanModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="addPlanModalLabel">Thêm Kế Hoạch Sản Xuất</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form id="addPlanForm">
+                    <div class="form-row">
+                        <div class="form-group col-md-6">
+                            <label for="line_id">Line Sản Xuất</label>
+                            <select class="form-control" id="line_id" name="line_id" required>
+                                <option value="">Chọn Line</option>
+                                <!-- Options loaded via AJAX -->
+                            </select>
+                        </div>
+                        <div class="form-group col-md-6">
+                            <label for="product_id">Sản Phẩm</label>
+                            <select class="form-control" id="product_id" name="product_id" required>
+                                <option value="">Chọn Sản Phẩm</option>
+                                <!-- Options loaded via AJAX -->
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group col-md-6">
+                            <label for="start_time">Thời Gian Bắt Đầu</label>
+                            <input type="datetime-local" class="form-control" id="start_time" name="start_time" required>
+                        </div>
+                        <div class="form-group col-md-6">
+                            <label for="end_time">Thời Gian Kết Thúc</label>
+                            <input type="datetime-local" class="form-control" id="end_time" name="end_time" required>
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group col-md-6">
+                            <label for="planned_quantity">Kế Hoạch Sản Lượng (Carton)</label>
+                            <input type="number" class="form-control" id="planned_quantity" name="planned_quantity" min="1" required>
+                        </div>
+                        <div class="form-group col-md-6">
+                            <label for="total_personnel">Tổng Số Nhân Sự</label>
+                            <input type="number" class="form-control" id="total_personnel" name="total_personnel" min="0">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="notes">Ghi Chú</label>
+                        <textarea class="form-control" id="notes" name="notes" rows="3"></textarea>
+                    </div>
+                    <div id="timeOverlapWarning" class="alert alert-danger d-none">
+                        Cảnh báo: Thời gian đã bị trùng với kế hoạch khác trên cùng line!
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Đóng</button>
+                <button type="button" class="btn btn-primary" id="submitPlan">Lưu Kế Hoạch</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal Chỉnh Sửa Kế Hoạch -->
+<div class="modal fade" id="editPlanModal" tabindex="-1" role="dialog" aria-labelledby="editPlanModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="editPlanModalLabel">Chỉnh Sửa Kế Hoạch Sản Xuất</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form id="editPlanForm">
+                    <input type="hidden" id="edit_plan_id" name="plan_id">
+                    <div class="form-row">
+                        <div class="form-group col-md-6">
+                            <label for="edit_line_id">Line Sản Xuất</label>
+                            <select class="form-control" id="edit_line_id" name="line_id" required>
+                                <option value="">Chọn Line</option>
+                                <!-- Options loaded via AJAX -->
+                            </select>
+                        </div>
+                        <div class="form-group col-md-6">
+                            <label for="edit_product_id">Sản Phẩm</label>
+                            <select class="form-control" id="edit_product_id" name="product_id" required>
+                                <option value="">Chọn Sản Phẩm</option>
+                                <!-- Options loaded via AJAX -->
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group col-md-6">
+                            <label for="edit_start_time">Thời Gian Bắt Đầu</label>
+                            <input type="datetime-local" class="form-control" id="edit_start_time" name="start_time" required>
+                        </div>
+                        <div class="form-group col-md-6">
+                            <label for="edit_end_time">Thời Gian Kết Thúc</label>
+                            <input type="datetime-local" class="form-control" id="edit_end_time" name="end_time" required>
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group col-md-6">
+                            <label for="edit_planned_quantity">Kế Hoạch Sản Lượng (Carton)</label>
+                            <input type="number" class="form-control" id="edit_planned_quantity" name="planned_quantity" min="1" required>
+                        </div>
+                        <div class="form-group col-md-6">
+                            <label for="edit_actual_quantity">Sản Lượng Thực Tế (Carton)</label>
+                            <input type="number" class="form-control" id="edit_actual_quantity" name="actual_quantity" min="0">
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group col-md-6">
+                            <label for="edit_total_personnel">Tổng Số Nhân Sự</label>
+                            <input type="number" class="form-control" id="edit_total_personnel" name="total_personnel" min="0">
+                        </div>
+                        <div class="form-group col-md-6">
+                            <!-- Giữ khoảng trống cho đối xứng -->
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="edit_notes">Ghi Chú</label>
+                        <textarea class="form-control" id="edit_notes" name="notes" rows="3"></textarea>
+                    </div>
+                    <div id="editTimeOverlapWarning" class="alert alert-danger d-none">
+                        Cảnh báo: Thời gian đã bị trùng với kế hoạch khác trên cùng line!
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-danger mr-auto" id="deletePlan">Xóa Kế Hoạch</button>
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Đóng</button>
+                <button type="button" class="btn btn-primary" id="updatePlan">Cập Nhật</button>
+            </div>
+        </div>
+    </div>
+</div>
+<?php endif; ?>
+
+<!-- Thêm scripts của trang -->
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.bundle.min.js"></script>
+<script src="assets/js/MMB/production_plan.js?v=<?php echo time(); ?>"></script>

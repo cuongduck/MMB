@@ -105,3 +105,10 @@ Stack trace:
 [23-Mar-2025 03:16:06 Asia/Ho_Chi_Minh] Remember me set: Success for user ktcn
 [24-Mar-2025 15:19:47 Asia/Ho_Chi_Minh] Remember me set: Success for user HienLV
 [25-Mar-2025 07:20:13 Asia/Ho_Chi_Minh] Remember me set: Success for user ktcn
+[06-Apr-2025 17:58:42 Asia/Ho_Chi_Minh] User logged in: ID: 18, Username: Hattv, Group: User
+[06-Apr-2025 17:58:55 Asia/Ho_Chi_Minh] User logged in: ID: 2, Username: admin, Group: Full_Control
+[06-Apr-2025 18:00:09 Asia/Ho_Chi_Minh] User logged in: ID: 18, Username: Hattv, Group: User
+[06-Apr-2025 18:31:14 Asia/Ho_Chi_Minh] User logged in: ID: 2, Username: admin, Group: Full_Control
+[07-Apr-2025 10:43:26 Asia/Ho_Chi_Minh] User logged in: ID: 18, Username: Hattv, Group: User
+[07-Apr-2025 10:51:58 Asia/Ho_Chi_Minh] User logged in: ID: 2, Username: admin, Group: Full_Control
+[07-Apr-2025 11:55:46 Asia/Ho_Chi_Minh] User logged in: ID: 2, Username: admin, Group: Full_Control

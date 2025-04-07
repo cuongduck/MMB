@@ -16,6 +16,16 @@ function initializeCharts() {
     if (typeof initFactorySteamChart === 'function' && document.getElementById('factorySteamChart')) {
         initFactorySteamChart();
     }
+    
+    // Khởi tạo Power Donut Chart
+    if (typeof initPowerDonutChart === 'function' && document.getElementById('powerDonutChart')) {
+        initPowerDonutChart();
+    }
+    
+    // Khởi tạo Power Line Chart
+    if (typeof initPowerLineChart === 'function' && document.getElementById('powerLineChart')) {
+        initPowerLineChart();
+    }
 }
 
 // Hàm cập nhật tất cả biểu đồ với period mới
@@ -35,6 +45,16 @@ function updateAllCharts(period) {
     // Cập nhật Factory Steam Chart
     if (typeof updateFactorySteamChart === 'function' && document.getElementById('factorySteamChart')) {
         updateFactorySteamChart(period);
+    }
+    
+    // Cập nhật Power Donut Chart
+    if (typeof updatePowerDonutChart === 'function' && document.getElementById('powerDonutChart')) {
+        updatePowerDonutChart(period);
+    }
+    
+    // Cập nhật Power Line Chart
+    if (typeof updatePowerLineChart === 'function' && document.getElementById('powerLineChart')) {
+        updatePowerLineChart(period);
     }
 }
 
@@ -59,6 +79,15 @@ function setupPeriodButtons() {
     });
 }
 
+// Cập nhật dữ liệu tự động
+function setupAutoRefresh() {
+    // Cập nhật dữ liệu mỗi phút
+    setInterval(function() {
+        const activePeriod = document.querySelector('.date-filter .btn.active')?.dataset?.period || 'today';
+        updateAllCharts(activePeriod);
+    }, 60000); // 60000ms = 1 phút
+}
+
 // Khởi tạo khi trang đã tải xong
 document.addEventListener('DOMContentLoaded', function() {
     // Khởi tạo biểu đồ
@@ -66,4 +95,7 @@ document.addEventListener('DOMContentLoaded', function() {
     
     // Thiết lập sự kiện nút
     setupPeriodButtons();
+    
+    // Thiết lập cập nhật tự động
+    setupAutoRefresh();
 });

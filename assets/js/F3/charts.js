@@ -14,7 +14,7 @@ async function updateAllCharts(period) {
             updateDowntimeTable(period),
             updatePowerDonutChart(period),
             updatePowerLineChart(period),
-            updatePowerTable(period),
+            //updatePowerTable(period),
             updateSteamTable(period),
             updateWeightTable(period),
             //updateLineOEEChart(line, period),// Hàm oee_line_details-chart.js

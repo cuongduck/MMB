@@ -1,95 +1,121 @@
+// Biến lưu trữ biểu đồ OEE theo line
 let oeeByLineChart = null;
 
-async function updateOEEByLineChart(period) {
+// Hàm cập nhật biểu đồ OEE theo line
+async function updateOEEByLineChart(period = 'today') {
     try {
-        // Lấy dữ liệu từ F2
-        const f2Response = await fetch(`api/F2/get_oee_data.php?period=${period}`);
-        const f2Data = await f2Response.json();
+        console.log('Updating OEE by line chart with period:', period);
         
-        // Lấy dữ liệu từ F3
-        const f3Response = await fetch(`api/F3/get_oee_data.php?period=${period}`);
-        const f3Data = await f3Response.json();
+        // Sử dụng API mới để lấy OEE của tất cả các line
+        const response = await fetch(`api/MMB/get_all_lines_oee.php?period=${period}`);
+        const data = await response.json();
         
-        // Lấy dữ liệu từ CSD
-        const csdResponse = await fetch(`api/CSD/get_oee_data.php?period=${period}`);
-        const csdData = await csdResponse.json();
+        if (data.error) {
+            console.error('Error fetching OEE data:', data.message);
+            return;
+        }
         
-        // Lấy dữ liệu từ FS
-        const fsResponse = await fetch(`api/FS/get_oee_data.php?period=${period}`);
-        const fsData = await fsResponse.json();
+        console.log('OEE data for all lines:', data);
         
-        // Xóa chart cũ nếu tồn tại
+        const lines = data.lines || [];
+        const values = data.values || [];
+        
+        // Target OEE là 89%
+        const targetData = Array(lines.length).fill(89);
+        
+        // Xóa biểu đồ cũ nếu đã tồn tại
         if (oeeByLineChart) {
             oeeByLineChart.destroy();
         }
         
-        // Tạo dữ liệu cho chart
-        const lineLabels = ['L1', 'L2', 'L3', 'L4', 'L5', 'L6', 'L7', 'L8', 'CSD', 'FS'];
-        
-        // Lấy dữ liệu OEE mới nhất của từng line
-        const lineOEEValues = [];
-        
-        // F2 (Line 1-4)
-        if (f2Data.line1OEE && f2Data.line1OEE.length > 0) lineOEEValues.push(f2Data.line1OEE[0]);
-        else lineOEEValues.push(0);
-        
-        if (f2Data.line2OEE && f2Data.line2OEE.length > 0) lineOEEValues.push(f2Data.line2OEE[0]);
-        else lineOEEValues.push(0);
-        
-        if (f2Data.line3OEE && f2Data.line3OEE.length > 0) lineOEEValues.push(f2Data.line3OEE[0]);
-        else lineOEEValues.push(0);
-        
-        if (f2Data.line4OEE && f2Data.line4OEE.length > 0) lineOEEValues.push(f2Data.line4OEE[0]);
-        else lineOEEValues.push(0);
-        
-        // F3 (Line 5-8)
-        if (f3Data.line5OEE && f3Data.line5OEE.length > 0) lineOEEValues.push(f3Data.line5OEE[0]);
-        else lineOEEValues.push(0);
-        
-        if (f3Data.line6OEE && f3Data.line6OEE.length > 0) lineOEEValues.push(f3Data.line6OEE[0]);
-        else lineOEEValues.push(0);
-        
-        if (f3Data.line7OEE && f3Data.line7OEE.length > 0) lineOEEValues.push(f3Data.line7OEE[0]);
-        else lineOEEValues.push(0);
-        
-        if (f3Data.line8OEE && f3Data.line8OEE.length > 0) lineOEEValues.push(f3Data.line8OEE[0]);
-        else lineOEEValues.push(0);
-        
-        // F1 (CSD, FS)
-        if (csdData.values && csdData.values.length > 0) lineOEEValues.push(csdData.values[0]);
-        else lineOEEValues.push(0);
-        
-        if (fsData.values && fsData.values.length > 0) lineOEEValues.push(fsData.values[0]);
-        else lineOEEValues.push(0);
-        
-        // Tạo mảng màu sắc dựa trên giá trị OEE
-        const barColors = lineOEEValues.map(value => value >= 89 ? 'rgba(46, 204, 113, 0.8)' : 'rgba(231, 76, 60, 0.8)');
-        const borderColors = lineOEEValues.map(value => value >= 89 ? 'rgb(39, 174, 96)' : 'rgb(192, 57, 43)');
-        
-        // Tạo chart mới
+        // Tạo biểu đồ mới
         const ctx = document.getElementById('oeeByLineChart').getContext('2d');
+        
+        // Custom tooltip function
+        const getOrCreateTooltip = (chart) => {
+            let tooltipEl = chart.canvas.parentNode.querySelector('div');
+            
+            if (!tooltipEl) {
+                tooltipEl = document.createElement('div');
+                tooltipEl.style.background = 'rgba(255, 255, 255, 0.95)';
+                tooltipEl.style.borderRadius = '3px';
+                tooltipEl.style.color = 'black';
+                tooltipEl.style.opacity = 1;
+                tooltipEl.style.pointerEvents = 'none';
+                tooltipEl.style.position = 'absolute';
+                tooltipEl.style.transform = 'translate(-50%, 0)';
+                tooltipEl.style.transition = 'all .1s ease';
+                tooltipEl.style.zIndex = '98';
+                tooltipEl.style.boxShadow = '0 2px 8px rgba(0,0,0,0.15)';
+                tooltipEl.style.border = '1px solid rgba(0,0,0,0.1)';
+                
+                const table = document.createElement('table');
+                table.style.margin = '0px';
+                
+                tooltipEl.appendChild(table);
+                chart.canvas.parentNode.appendChild(tooltipEl);
+            }
+            
+            return tooltipEl;
+        };
+        
+        // Tạo mảng màu cho các bar
+        const barColors = values.map((value, index) => {
+            // Chỉ sử dụng 2 màu: xanh cho OEE >= 89%, đỏ cho OEE < 89%
+            if (value >= 89) {
+                return 'rgba(52, 152, 219, 0.8)'; // Xanh lam cho OEE >= 89%
+            } else {
+                return 'rgba(231, 76, 60, 0.8)'; // Đỏ cho OEE < 89%
+            }
+        });
+        
+        // Sắp xếp dữ liệu giảm dần theo giá trị OEE
+        const combinedData = lines.map((line, index) => ({
+            line: line,
+            value: values[index]
+        }));
+        
+        combinedData.sort((a, b) => b.value - a.value);
+        
+        const sortedLines = combinedData.map(item => item.line);
+        const sortedValues = combinedData.map(item => item.value);
+        const sortedColors = combinedData.map(item => {
+            if (item.value >= 89) {
+                return 'rgba(52, 152, 219, 0.8)'; // Xanh lam cho OEE >= 89%
+            } else {
+                return 'rgba(231, 76, 60, 0.8)'; // Đỏ cho OEE < 89%
+            }
+        });
+        
+        // Tạo biểu đồ
         oeeByLineChart = new Chart(ctx, {
             type: 'bar',
             data: {
-                labels: lineLabels,
+                labels: sortedLines,
                 datasets: [
                     {
-                        label: 'OEE Line (%)',
-                        data: lineOEEValues,
-                        backgroundColor: barColors,
-                        borderColor: borderColors,
+                        label: 'OEE Line',
+                        data: sortedValues,
+                        backgroundColor: sortedColors,
+                        borderColor: 'rgba(0, 0, 0, 0.1)',
                         borderWidth: 1,
-                        borderRadius: 4
+                        borderRadius: 5,
+                        barThickness: 40,
+                        maxBarThickness: 60
                     },
                     {
                         label: 'Target (89%)',
-                        data: new Array(lineLabels.length).fill(89),
+                        data: Array(sortedLines.length).fill(89),
                         type: 'line',
                         borderColor: '#e74c3c',
                         borderWidth: 2,
                         borderDash: [5, 5],
                         pointRadius: 0,
-                        fill: false
+                        fill: false,
+                        order: 0,
+                        datalabels: {
+                            display: false // Ẩn nhãn cho đường target
+                        }
                     }
                 ]
             },
@@ -99,9 +125,9 @@ async function updateOEEByLineChart(period) {
                 scales: {
                     y: {
                         beginAtZero: true,
-                        max: 100,
+                        max: 100, // Giới hạn trục y đến 100%
                         grid: {
-                            color: 'rgba(0, 0, 0, 0.1)',
+                            color: 'rgba(0, 0, 0, 0.05)',
                             drawBorder: false
                         },
                         ticks: {
@@ -110,6 +136,13 @@ async function updateOEEByLineChart(period) {
                             },
                             font: {
                                 size: 11
+                            }
+                        },
+                        title: {
+                            display: true,
+                            text: 'OEE (%)',
+                            font: {
+                                size: 12
                             }
                         }
                     },
@@ -127,8 +160,8 @@ async function updateOEEByLineChart(period) {
                 },
                 plugins: {
                     legend: {
+                        display: true,
                         position: 'top',
-                        align: 'end',
                         labels: {
                             boxWidth: 12,
                             font: {
@@ -137,38 +170,98 @@ async function updateOEEByLineChart(period) {
                         }
                     },
                     tooltip: {
-                        callbacks: {
-                            label: function(context) {
-                                const value = context.raw;
-                                if (context.dataset.type === 'line') {
-                                    return 'Target: 89%';
-                                }
-                                return `OEE: ${value.toFixed(1)}%`;
-                            },
-                            footer: function(tooltipItems) {
-                                const value = tooltipItems[0].raw;
-                                const difference = (value - 89).toFixed(1);
-                                return `Chênh lệch: ${difference > 0 ? '+' : ''}${difference}%`;
+                        enabled: false,
+                        position: 'nearest',
+                        external: function(context) {
+                            const {chart, tooltip} = context;
+                            const tooltipEl = getOrCreateTooltip(chart);
+
+                            // Ẩn tooltip nếu không có dữ liệu
+                            if (tooltip.opacity === 0) {
+                                tooltipEl.style.opacity = 0;
+                                return;
                             }
+
+                            // Thiết lập nội dung
+                            if (tooltip.body) {
+                                const titleLines = tooltip.title || [];
+                                const bodyLines = tooltip.body.map(b => b.lines);
+                                const dataIndex = tooltip.dataPoints[0].dataIndex;
+                                
+                                const lineValue = sortedValues[dataIndex];
+                                const targetValue = 89;
+                                const difference = (lineValue - targetValue).toFixed(1);
+                                const diffColor = difference >= 0 ? '#2ecc71' : '#e74c3c';
+
+                                // Tạo header tooltip
+                                const tableHead = document.createElement('thead');
+                                let tableHTML = `
+                                    <tr>
+                                        <th style="text-align: center; font-weight: 600; padding: 8px; font-size: 13px; color: #333;">
+                                            ${titleLines[0]}
+                                        </th>
+                                    </tr>
+                                `;
+                                tableHead.innerHTML = tableHTML;
+
+                                // Tạo nội dung tooltip
+                                const tableBody = document.createElement('tbody');
+                                tableHTML = `
+                                    <tr>
+                                        <td style="padding: 8px;">
+                                            <div style="margin: 2px 0; font-size: 13px;">
+                                                <span style="display: inline-block; width: 8px; height: 8px; background: ${sortedColors[dataIndex]}; border-radius: 50%; margin-right: 8px;"></span>
+                                                <span style="color: #666;">OEE:</span>
+                                                <span style="float: right; font-weight: 600; color: ${lineValue >= 89 ? 'rgba(52, 152, 219, 1)' : 'rgba(231, 76, 60, 1)'}">${lineValue.toFixed(1)}%</span>
+                                            </div>
+                                            <div style="margin: 2px 0; font-size: 13px;">
+                                                <span style="display: inline-block; width: 8px; height: 8px; background: #e74c3c; border-radius: 50%; margin-right: 8px;"></span>
+                                                <span style="color: #666;">Target:</span>
+                                                <span style="float: right; font-weight: 600; color: #e74c3c">89.0%</span>
+                                            </div>
+                                            <div style="margin: 2px 0; font-size: 13px; border-top: 1px solid #eee; padding-top: 4px; margin-top: 4px;">
+                                                <span style="color: #666;">Chênh lệch:</span>
+                                                <span style="float: right; font-weight: 600; color: ${diffColor}">${difference > 0 ? '+' : ''}${difference}%</span>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                `;
+                                tableBody.innerHTML = tableHTML;
+
+                                const tableRoot = tooltipEl.querySelector('table');
+                                // Xóa nội dung tooltip cũ
+                                while (tableRoot.firstChild) {
+                                    tableRoot.firstChild.remove();
+                                }
+
+                                // Thêm nội dung tooltip mới
+                                tableRoot.appendChild(tableHead);
+                                tableRoot.appendChild(tableBody);
+                            }
+
+                            const {offsetLeft: positionX, offsetTop: positionY} = chart.canvas;
+
+                            // Hiển thị, vị trí và thiết lập styles
+                            tooltipEl.style.opacity = 1;
+                            tooltipEl.style.left = positionX + tooltip.caretX + 'px';
+                            tooltipEl.style.top = positionY + tooltip.caretY + 'px';
+                            tooltipEl.style.padding = tooltip.options.padding + 'px ' + tooltip.options.padding + 'px';
                         }
                     },
                     datalabels: {
                         anchor: 'end',
                         align: 'top',
-                        formatter: function(value, context) {
-                            if (context.dataset.type === 'line') return '';
+                        formatter: function(value) {
                             return value.toFixed(1) + '%';
                         },
                         color: function(context) {
-                            const value = context.dataset.data[context.dataIndex];
-                            return value >= 89 ? '#27ae60' : '#c0392b';
+                            const index = context.dataIndex;
+                            const value = context.dataset.data[index];
+                            return value >= 89 ? 'rgba(52, 152, 219, 1)' : 'rgba(231, 76, 60, 1)';
                         },
                         font: {
                             weight: 'bold',
                             size: 11
-                        },
-                        padding: {
-                            top: 4
                         },
                         offset: 2
                     }
@@ -176,27 +269,20 @@ async function updateOEEByLineChart(period) {
             },
             plugins: [ChartDataLabels]
         });
-
-        console.log('OEE by Line chart updated successfully');
+        
+        console.log('OEE by line chart updated successfully');
     } catch (error) {
-        console.error('Error updating OEE by Line chart:', error);
+        console.error('Error updating OEE by line chart:', error);
     }
 }
 
-// Khởi tạo chart
+// Hàm khởi tạo biểu đồ với period mặc định là 'today'
 function initOEEByLineChart() {
-    console.log('Initializing OEE by Line chart...');
     updateOEEByLineChart('today');
 }
 
-// Hàm cập nhật OEE by Line Chart khi đổi period
-function updateOEEbyLineChartByPeriod(period) {
-    updateOEEByLineChart(period);
-}
-
-// Gắn sự kiện cho các nút period
+// Gán sự kiện cho các nút chọn period
 document.addEventListener('DOMContentLoaded', function() {
-    // Kiểm tra nếu chưa có sự kiện và đang ở trang factory
     const periodButtons = document.querySelectorAll('.date-filter .btn');
     
     periodButtons.forEach(button => {
@@ -204,12 +290,12 @@ document.addEventListener('DOMContentLoaded', function() {
             const period = this.dataset.period;
             
             // Cập nhật biểu đồ với period mới
-            if (oeeByLineChart) {
+            if (typeof updateOEEByLineChart === 'function') {
                 updateOEEByLineChart(period);
             }
         });
     });
     
-    // Khởi tạo chart
+    // Khởi tạo biểu đồ
     initOEEByLineChart();
 });
